@@ -3296,6 +3296,8 @@ class MainWindowController: PlayerWindowController {
       player.screenshot()
     case .plugins:
       showPluginSidebar(tab: nil)
+    case .screenshotToPlaybackPath:
+      player.screenshotToPlaybackPath()
     }
   }
 

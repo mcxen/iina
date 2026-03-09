@@ -972,6 +972,40 @@ class PlayerCore: NSObject {
   /// set to false, all screenshot commands will be ignored.
   /// 2. When no flags are given with `screenshot`: instead of defaulting to `subtitles` as mpv does, IINA will use the value for
   /// `Preference.Key.screenshotIncludeSubtitle` to decide between `subtitles` or `video`.
+
+
+  @discardableResult
+  func screenshotToPlaybackPath() -> Bool {
+    guard let currentURL = info.currentURL, currentURL.isFileURL else {
+      log("Ignoring screenshot-to-file request: current playback URL is not a local file", level: .warning)
+      return false
+    }
+
+    guard let vid = info.vid, vid > 0 else {
+      log("Ignoring screenshot-to-file request: no video stream is being played", level: .warning)
+      return false
+    }
+
+    let folder = currentURL.deletingLastPathComponent()
+    let fileStem = currentURL.deletingPathExtension().lastPathComponent
+    let format = (Preference.enum(for: .screenshotFormat) as Preference.ScreenshotFormat).string
+    let timestamp = Int(Date().timeIntervalSince1970)
+    let outputFile = folder.appendingPathComponent("\(fileStem)-\(timestamp).\(format)")
+
+    let includeSubtitles = Preference.bool(for: .screenshotIncludeSubtitle)
+    let screenshotType = includeSubtitles ? "subtitles" : "video"
+    let returnValue = mpv.command(.screenshotToFile, args: [outputFile.path, screenshotType], checkError: false)
+    if returnValue == 0 {
+      sendOSD(.screenshot)
+      return true
+    }
+
+    log("Cannot take screenshot-to-file, mpv API return value: \(returnValue)", level: .error)
+    Utility.showAlert("screenshot.error_taking")
+    return false
+  }
+
+  /// Takes a screenshot, with optional key binding flags.
   @discardableResult
   func screenshot(fromKeyBinding keyBinding: KeyMapping? = nil) -> Bool {
     let saveToFile = Preference.bool(for: .screenshotSaveToFile)

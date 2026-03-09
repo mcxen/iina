@@ -406,6 +406,7 @@
 "osc_toolbar.music_mode" = "Enter music mode";
 "osc_toolbar.sub_track" = "Choose subtitle track";
 "osc_toolbar.screenshot" = "Take a screenshot";
+"osc_toolbar.screenshot_to_playback_path" = "Screenshot to playback path";
 "osc_toolbar.plugins" = "Show plugins panel";
 
 "mini_player.album_art" = "Toggle album art";
