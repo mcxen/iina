@@ -727,6 +727,7 @@ struct Preference {
     case subTrack
     case screenshot
     case plugins
+    case screenshotToPlaybackPath
 
     func image() -> NSImage {
       func makeSymbol(_ names: [String], _ fallbackImage: NSImage.Name) -> NSImage {
@@ -743,6 +744,7 @@ struct Preference {
       case .subTrack: return makeSymbol(["captions.bubble.fill"], "sub-track")
       case .screenshot: return makeSymbol(["camera.shutter.button"], "screenshot")
       case .plugins: return makeSymbol(["puzzlepiece.extension"], "plugin")
+      case .screenshotToPlaybackPath: return makeSymbol(["camera.metering.matrix", "camera.shutter.button"], "screenshot")
       }
     }
 
@@ -757,6 +759,7 @@ struct Preference {
       case .subTrack: key = "sub_track"
       case .screenshot: key = "screenshot"
       case .plugins: key = "plugins"
+      case .screenshotToPlaybackPath: key = "screenshot_to_playback_path"
       }
       return NSLocalizedString("osc_toolbar.\(key)", comment: key)
     }
