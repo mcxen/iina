@@ -994,7 +994,10 @@ class PlayerCore: NSObject {
 
     let includeSubtitles = Preference.bool(for: .screenshotIncludeSubtitle)
     let screenshotType = includeSubtitles ? "subtitles" : "video"
-    let returnValue = mpv.command(.screenshotToFile, args: [outputFile.path, screenshotType], checkError: false)
+    var returnValue: Int32 = -1
+    mpv.command(.screenshotToFile, args: [outputFile.path, screenshotType], checkError: false) {
+      returnValue = $0
+    }
     if returnValue == 0 {
       sendOSD(.screenshot)
       return true
